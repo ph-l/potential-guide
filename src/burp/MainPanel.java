@@ -14,6 +14,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
+import java.util.Arrays;
 
 /**
  *
@@ -475,8 +476,11 @@ public class MainPanel extends javax.swing.JPanel {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         try {
-            this.myburp.cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            this.myburp.sec_key = new SecretKeySpec(this.jTextField1.getText().getBytes(),"AES");
+            this.myburp.cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+	        byte[] sha1hash = digest.digest(this.jTextField1.getText().getBytes()));
+            byte[] key = Arrays.copyOfRange(sha1hash, 0, 16);
+            this.myburp.sec_key = new SecretKeySpec(key,"AES");
             this.myburp.iv_param = new IvParameterSpec(this.jTextField2.getText().getBytes());
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
